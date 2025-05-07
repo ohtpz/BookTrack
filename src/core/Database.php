@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace core;
+namespace Elpommier\BookTrack\Core;
 
-require_once __DIR__ . '/../Config/database.php';
+require_once __DIR__ . '../../config/database.php';
 
 use PDO;
 
