@@ -3,7 +3,7 @@
 namespace Elpommier\BookTrack\models;
 
 use DateTime;
-use Elpommier\BookTrack\core\Database;
+use core\Database;
 use PDO;
 
 class Livre {

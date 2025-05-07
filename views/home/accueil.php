@@ -6,23 +6,7 @@
     <title>Collapsible Sidebar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            border-right: 1px solid #dee2e6;
-            padding: 1rem;
-        }
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .nav-link {
-            cursor: pointer;
-        }
-    </style>
+
 </head>
 <body>
       
@@ -105,7 +89,6 @@
         </div>
     </div>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 </body>
 </html>
