@@ -1,15 +1,19 @@
-<?php
+<?php 
+
 namespace Elpommier\BookTrack\controllers;
 
+use Elpommier\BookTrack\models\Livre;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\PhpRenderer;
 
-class BaseController {
+class LivreController {
+    public function getBooks(Request $request, Response $response) {
 
-    public function home(Request $request, Response $response) {
+        $livres = Livre::fetchBooks();
         $data = [
-            "title" => "Accueil"
+            "title" => "Accueil",
+            "livres" => $livres
         ];
 
         $render = new PhpRenderer(__DIR__."/../../views/", $data);
