@@ -12,6 +12,11 @@ class RegisterController
     {
         ob_start();
         require_once __DIR__ . '/../../views/inscription/form.php';
+        $content = ob_get_clean();
+
+        $title = 'Inscription';
+        ob_start();
+        require_once __DIR__ . '/../../views/layout.php';
         $html = ob_get_clean();
 
         $response->getBody()->write($html);
@@ -23,9 +28,9 @@ class RegisterController
         $data = $request->getParsedBody();
         $files = $request->getUploadedFiles();
 
-        $nom = $data['nom'] ?? '';
-        $prenom = $data['prenom'] ?? '';
-        $email = $data['email'] ?? '';
+        $nom = trim($data['nom'] ?? '');
+        $prenom = trim($data['prenom'] ?? '');
+        $email = trim($data['email'] ?? '');
         $password = $data['password'] ?? '';
 
         if (empty($nom) || empty($prenom) || empty($email) || empty($password)) {
@@ -37,8 +42,8 @@ class RegisterController
             return $response->withHeader('Location', '/register?error=Email+d%C3%A9j%C3%A0+utilis%C3%A9')->withStatus(302);
         }
 
-        // Traitement image
-        $imagePath = null;
+        // Gestion de l’image
+        $imagePath = '/img/default/defaultUser.png'; // par défaut
         if (!empty($files['imageProfil']) && $files['imageProfil']->getError() === UPLOAD_ERR_OK) {
             $image = $files['imageProfil'];
             $extension = pathinfo($image->getClientFilename(), PATHINFO_EXTENSION);
@@ -49,8 +54,7 @@ class RegisterController
             $imagePath = '/uploads/' . $filename;
         }
 
-        $imagePath = $imagePath ?? '/img/default/defaultUser.png';
-
+        // Création de l’utilisateur
         $userModel->create([
             'nom' => $nom,
             'prenom' => $prenom,

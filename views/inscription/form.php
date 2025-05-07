@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Inscription</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
-
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-lg-6 col-md-8">
             <div class="card shadow-sm rounded-4">
                 <div class="card-body">
                     <h1 class="card-title text-center mb-4">Inscription</h1>
+
                     <form method="post" action="/register" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="prenom" class="form-label">Prénom</label>
@@ -52,7 +42,3 @@
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+k0TPsSUHmrqQEZBJ5EYXPLkZXl2b7xvFeoJEB6Digw1k3D6Z0fjQX+0Gooy2V" crossorigin="anonymous"></script>
-</body>
-</html>
