@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Elpommier\\BookTrack\\": "src/"
+            "Elpommier\\BookTrack\\": "src/",
+            "core\\": "src/core/"
         }
     },
     "minimum-stability": "stable",
