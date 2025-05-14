@@ -18,10 +18,13 @@ if (isset($_SESSION['user'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'BookTrack') ?></title>
-
+    
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+     <!-- Own CSS -->
+    <link rel="stylesheet" href="/css/style.css">
 
     <style>
         .sidebar {
@@ -60,6 +63,10 @@ if (isset($_SESSION['user'])) {
                         <?php if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']->getPrenom()) ?></a>
+                                <a class="nav-link" href="/emprunt/mes-demandes">Demandes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']['prenom']) ?></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-danger" href="/logout">Déconnexion</a>
