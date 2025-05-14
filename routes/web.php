@@ -7,6 +7,7 @@ use Elpommier\BookTrack\controllers\LogoutController;
 use Elpommier\BookTrack\controllers\EmpruntController;
 use Elpommier\BookTrack\controllers\LivreController;
 
+//Acceuil
 $app->get("/", [LivreController::class, "getBooks"]);
 
 // Connexion
@@ -25,6 +26,8 @@ $app->post('/emprunt/demande', [EmpruntController::class, 'creerDemande']);
 $app->get('/emprunt/{idLivre}', [EmpruntController::class, 'formulaire']);
 $app->post('/emprunt/{idLivre}', [EmpruntController::class, 'traiterFormulaire']);
 
+//Detail
+$app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);
 
 
 
