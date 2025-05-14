@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,18 +29,24 @@
             <div class="accordion-item border-0">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#homeMenu">
-                        Home
+                        Home 
+                        <!-- Fetch the bibliotheques name -->
                     </button>
                 </h2>
                 <div id="homeMenu" class="accordion-collapse collapse show" data-bs-parent="#sidebarMenu">
                     <div class="accordion-body py-0">
                         <ul class="nav flex-column ms-3">
+                            <!-- Fetch the books that are in that bibliotheque -->
                             <li class="nav-item"><a class="nav-link" href="#">Overview</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Updates</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
                         </ul>
                     </div>
                 </div>
+
+                <?php
+                    echo "";
+                ?>
             </div>
 
             <div class="accordion-item border-0">

@@ -6,6 +6,7 @@ use Elpommier\BookTrack\controllers\RegisterController;
 use Elpommier\BookTrack\controllers\LogoutController;
 use Elpommier\BookTrack\controllers\EmpruntController;
 use Elpommier\BookTrack\controllers\LivreController;
+use Elpommier\BookTrack\controllers\BilbiothequeController;
 
 $app->get("/", [LivreController::class, "getBooks"]);
 
@@ -25,7 +26,8 @@ $app->post('/emprunt/demande', [EmpruntController::class, 'creerDemande']);
 $app->get('/emprunt/{idLivre}', [EmpruntController::class, 'formulaire']);
 $app->post('/emprunt/{idLivre}', [EmpruntController::class, 'traiterFormulaire']);
 
-
+// Bibliothèque
+$app->post('/bibliotheque/add', [BilbiothequeController::class, 'ajouteBibliotheque']);
 
 
 

@@ -1,3 +1,17 @@
+<?php
+use Elpommier\BookTrack\models\Bibliotheque;
+use Elpommier\BookTrack\models\User;
+
+$user = null;
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $user->connect();
+    $listBibliotheques = Bibliotheque::fetchBibliothequesByUserId($user->getIdUtilisateur());
+} else {
+    $listBibliotheques = [];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -45,7 +59,7 @@
                         </li>
                         <?php if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']['prenom']) ?></a>
+                                <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']->getPrenom()) ?></a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-danger" href="/logout">Déconnexion</a>
@@ -66,75 +80,57 @@
 
     <div class="d-flex">
         <div class="sidebar bg-white">
-            <div class="sidebar-header">
-                <button class="btn btn-sm btn-outline-primary">
+            <div class="sidebar-header flex-column align-items-start">
+                <button id="addLibraryButton" class="btn btn-sm btn-outline-primary mb-2">
                     <i class="bi bi-plus-lg"></i>
                 </button>
-            </div>
+
+                <form method="POST" action="/bibliotheque/add" class="w-100 d-flex align-items-center gap-2" style="display: none;" id="libraryInputContainer">
+                    <input type="text" class="form-control form-control-sm" name="nom" placeholder="Nom de la bibliothèque" minlength="3" required>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="bi bi-check-lg"></i>
+                    </button>
+                </form>
+            </div>  
+
 
             <div class="accordion" id="sidebarMenu">
 
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#homeMenu">
-                            Home
-                        </button>
-                    </h2>
-                    <div id="homeMenu" class="accordion-collapse collapse">
-                        <div class="accordion-body py-0">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item"><a class="nav-link" href="#">Overview</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Updates</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#dashboardMenu">
-                            Dashboard
-                        </button>
-                    </h2>
-                    <div id="dashboardMenu" class="accordion-collapse collapse">
-                        <div class="accordion-body py-0">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item"><a class="nav-link" href="#">Analytics</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#ordersMenu">
-                            Orders
-                        </button>
-                    </h2>
-                    <div id="ordersMenu" class="accordion-collapse collapse">
-                        <div class="accordion-body py-0">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item"><a class="nav-link" href="#">All Orders</a></li>
-                            </ul>
+                <?php 
+                if($listBibliotheques):
+                 foreach ($listBibliotheques as $biblio): ?>
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#biblioMenu<?= $biblio->idBiblio ?>">
+                                <?= htmlspecialchars($biblio->nom) ?>
+                            </button>
+                        </h2>
+                        <div id="biblioMenu<?= $biblio->idBiblio ?>" class="accordion-collapse collapse">
+                            <div class="accordion-body py-0">
+                                <ul class="nav flex-column ms-3">
+                                <?php if (!empty($biblio->livres)): ?>
+                                    <?php foreach ($biblio->livres as $livre): ?>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#">
+                                                <?= htmlspecialchars($livre['titre'] ?? 'Sans titre') ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li class="nav-item">
+                                        <span class="nav-link text-muted">Aucun livre</span>
+                                    </li>
+                                <?php endif; ?>
+                                </ul>                                
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="accordion-item border-0">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#accountMenu">
-                            Account
-                        </button>
-                    </h2>
-                    <div id="accountMenu" class="accordion-collapse collapse">
-                        <div class="accordion-body py-0">
-                            <ul class="nav flex-column ms-3">
-                                <li class="nav-item"><a class="nav-link" href="#">Profile</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <?php 
+             endforeach;
+            endif; ?>
+            
 
             </div>
         </div>
@@ -146,5 +142,16 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('addLibraryButton');
+        const form = document.getElementById('libraryInputContainer');
+
+        btn.addEventListener('click', () => {
+            form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+        });
+    });
+</script>
+
 </body>
 </html>
