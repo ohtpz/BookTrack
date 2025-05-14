@@ -7,13 +7,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\PhpRenderer;
 
-class LivreController {
+class LivreController extends BaseController {
     public function getBooks(Request $request, Response $response) {
 
         $livres = Livre::fetchBooks();
         $data = [
             "title" => "Accueil",
-            "livres" => $livres
+            "livres" => $livres,
+
         ];
 
         $render = new PhpRenderer(__DIR__."/../../views/", $data);

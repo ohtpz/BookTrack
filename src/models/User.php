@@ -7,26 +7,117 @@ use PDO;
 
 class User
 {
-    private PDO $db;
+    private ?int $idUtilisateur = null;
+    private ?string $email = null;
+    private ?string $mdpHash = null;
+    private ?string $nom = null;
+    private ?string $prenom = null;
+    private ?string $imageProfil = null;
+    private ?string $role = null;
 
-    public function __construct()
+    // --- Méthodes ---
+
+    public static function fetchAll(): array
     {
-        $this->db = Database::connection();
+        $stmt = Database::connection()->prepare("SELECT * FROM Utilisateur");
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
+        return $stmt->fetchAll();
     }
 
-    public function findByEmail(string $email): ?array
+    public static function findByEmail(string $email): User|false
     {
-        $stmt = $this->db->prepare("SELECT * FROM Utilisateur WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $stmt = Database::connection()->prepare("SELECT * FROM Utilisateur WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
+        return $stmt->fetch();
     }
 
-    public function create(array $data): bool
+    public static function create(array $data): bool
     {
-        $stmt = $this->db->prepare("
+        $stmt = Database::connection()->prepare("
             INSERT INTO Utilisateur (nom, prenom, email, mdpHash, imageProfil, role)
             VALUES (:nom, :prenom, :email, :mdpHash, :imageProfil, :role)
         ");
         return $stmt->execute($data);
+    }
+
+    public static function current(): ?User
+    {
+        static $current = null;
+
+        if (!$current) {
+            $email = $_SESSION['User'] ?? null;
+            if ($email !== null) {
+                $current = static::findByEmail($email);
+            }
+        }
+
+        return $current;
+    }
+
+    public function connect(): void
+    {
+        $_SESSION['User'] = $this->email;
+        session_regenerate_id(true);
+    }
+
+    public function logout(): void
+    {
+        $_SESSION['User'] = null;
+    }
+
+    public function verifyAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isMemberOfBibliotheque(int $idBiblio): bool
+    {
+        $stmt = Database::connection()->prepare("
+            SELECT * FROM Biblio_User WHERE idUtilisateur = :idUtilisateur AND idBiblio = :idBiblio
+        ");
+        $stmt->execute([
+            'idUtilisateur' => $this->getIdUtilisateur(),
+            'idBiblio' => $idBiblio
+        ]);
+        return $stmt->fetch() !== false;
+    }
+
+    // --- Getters ---
+
+    public function getIdUtilisateur(): int
+    {
+        return $this->idUtilisateur;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function getImageProfil(): ?string
+    {
+        return $this->imageProfil;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
+    public function getMdpHash(): string
+    {
+        return $this->mdpHash ?? '';
     }
 }

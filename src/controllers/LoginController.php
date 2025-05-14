@@ -38,7 +38,7 @@ class LoginController
         $userModel = new User();
         $user = $userModel->findByEmail($email);
 
-        if ($user && password_verify($password, $user['mdpHash'])) {
+        if ($user && password_verify($password, $user->getMdpHash())) {
             $_SESSION['user'] = $user;
             return $response->withHeader('Location', '/')->withStatus(302);
         } else {
