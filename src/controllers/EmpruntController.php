@@ -86,7 +86,7 @@ class EmpruntController
 
     public function mesDemandes(Request $request, Response $response): Response
     {
-        $idUtilisateur = $_SESSION['user']['idUtilisateur'];
+        $idUtilisateur = $_SESSION['user']->getIdUtilisateur();
         $modele = new Emprunt();
 
         $demandesRecues = $modele->getDemandesRecues($idUtilisateur);
