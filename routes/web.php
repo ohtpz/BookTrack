@@ -7,6 +7,7 @@ use Elpommier\BookTrack\controllers\LogoutController;
 use Elpommier\BookTrack\controllers\EmpruntController;
 use Elpommier\BookTrack\controllers\LivreController;
 
+//Acceuil
 $app->get("/", [LivreController::class, "getBooks"]);
 
 // Connexion
@@ -30,4 +31,7 @@ $app->get('/emprunt/historique', [EmpruntController::class, 'historique']);
 // Emprunt routes dynamiques
 $app->get('/emprunt/{idLivre}', [EmpruntController::class, 'formulaire']);
 $app->post('/emprunt/{idLivre}', [EmpruntController::class, 'traiterFormulaire']);
+
+//Detail
+$app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);
 

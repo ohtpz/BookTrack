@@ -20,4 +20,24 @@ class LivreController {
         $render->setLayout("layout.php");
         return $render->render($response, "accueil/index.php");
     }
+
+    public function getBook(Request $request, Response $response, array $args) {
+
+        $idLivre = (int) $args['idLivre'];
+
+        $livre = Livre::fetchBook($idLivre);
+
+        if(count($livre) > 0) {
+            $data = [
+                "title" => "Détail de ".$livre[0]->titre,
+                "livre" => $livre[0]
+            ];
+    
+            $render = new PhpRenderer(__DIR__."/../../views/", $data);
+            $render->setLayout("layout.php");
+            return $render->render($response, "detail/detail.php");
+        }
+        else 
+            return $response->withHeader('Location', '/')->withStatus(302);
+    }
 }

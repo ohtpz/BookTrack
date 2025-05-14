@@ -15,7 +15,7 @@ class Livre {
 
     public $illustration;
 
-    public ?DateTime $dateParution;
+    public ?string $dateParution;
 
     public ?string $statutLecture;
 
@@ -24,6 +24,14 @@ class Livre {
     public static function fetchBooks() {
         $stmt = Database::connection()->query("SELECT idLivre, titre, illustration, auteur FROM Livre");
         $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
+        return $stmt->fetchAll();
+    }
+
+    public static function fetchBook($idLivre) {
+        $stmt = Database::connection()->prepare("SELECT * FROM Livre WHERE idLivre = :idLivre");
+        $stmt->bindParam("idLivre", $idLivre);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
+        $stmt->execute();
         return $stmt->fetchAll();
     }
 }
