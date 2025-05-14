@@ -29,6 +29,9 @@
                         </li>
                         <?php if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item">
+                                <a class="nav-link" href="/emprunt/mes-demandes">Demandes</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']['prenom']) ?></a>
                             </li>
                             <li class="nav-item">
