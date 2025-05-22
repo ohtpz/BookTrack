@@ -13,21 +13,21 @@ class LoginController
         ob_start();
         require_once __DIR__ . '/../../views/connexion/form.php';
         $content = ob_get_clean();
-    
+
         $title = 'Connexion';
-    
+
         extract(compact('title', 'content'));
-    
+
         ob_start();
         require_once __DIR__ . '/../../views/layout.php';
         $html = ob_get_clean();
-    
+
         $response->getBody()->write($html);
         return $response;
     }
-    
-    
-    
+
+
+
 
     public function handleLogin(Request $request, Response $response): Response
     {

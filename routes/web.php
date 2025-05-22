@@ -35,6 +35,9 @@ $app->post('/emprunt/{idLivre}', [EmpruntController::class, 'traiterFormulaire']
 
 // Bibliothèque
 $app->post('/bibliotheque/add', [BilbiothequeController::class, 'ajouteBibliotheque']);
+$app->get('/bibliotheque/{idBiblio}', [BilbiothequeController::class, 'getBibliotheque']);
+$app->post('/bibliotheque/delete/{idBiblio}', [BilbiothequeController::class, 'deleteBibliotheque']);
+$app->post('/bibliotheque/edit/{idBiblio}', [BilbiothequeController::class, 'editBibliotheque']);
 
 //Detail
 $app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);

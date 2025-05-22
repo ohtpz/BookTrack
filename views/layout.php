@@ -10,9 +10,10 @@ if (isset($_SESSION['user'])) {
 } else {
     $listBibliotheques = [];
 }
+var_dump($user);
 ?>
 
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -63,7 +64,9 @@ if (isset($_SESSION['user'])) {
                         <?php if (!empty($_SESSION['user'])): ?>
                             
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Bonjour, <?= htmlspecialchars($_SESSION['user']->getPrenom()) ?></a>
+                                <a class="nav-link" href="/">Bonjour, <?= htmlspecialchars($_SESSION['user']->getPrenom()) ?></a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/emprunt/mes-demandes">Demandes</a>
                             </li>
                             <li class="nav-item">
@@ -85,36 +88,44 @@ if (isset($_SESSION['user'])) {
 
     <div class="d-flex">
         <div class="sidebar bg-white">
-            <div class="sidebar-header flex-column align-items-start">
-                <button id="addLibraryButton" class="btn btn-sm btn-outline-primary mb-2">
-                    <i class="bi bi-plus-lg"></i>
-                </button>
+        <div class="sidebar-header flex-column align-items-start">
+            <button id="addLibraryButton" class="btn btn-sm btn-outline-primary mb-2">
+                <i class="bi bi-plus-lg"></i>
+            </button>
 
-                <form method="POST" action="/bibliotheque/add" class="w-100 d-flex align-items-center gap-2" style="display: none;" id="libraryInputContainer">
-                    <input type="text" class="form-control form-control-sm" name="nom" placeholder="Nom de la bibliothèque" minlength="3" required>
-                    <button type="submit" class="btn btn-sm btn-success">
-                        <i class="bi bi-check-lg"></i>
-                    </button>
-                </form>
-            </div>  
+            <form method="POST" action="/bibliotheque/add"
+                class="w-100 d-none d-flex align-items-center gap-2"
+                id="libraryInputContainer">
+                <input type="text" class="form-control form-control-sm" name="nom"
+                    placeholder="Nom de la bibliothèque" minlength="3" required>
+                <button type="submit" class="btn btn-sm btn-success">
+                    <i class="bi bi-check-lg"></i>
+                </button>
+            </form>
+        </div>
+                            
+
 
 
             <div class="accordion" id="sidebarMenu">
+            <!-- Hide accordion if user isnt connected -->
+            <?php if ($listBibliotheques): ?>
+            <?php foreach ($listBibliotheques as $biblio): ?>
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header d-flex justify-content-between align-items-center">
+                        <div class="accordion-button collapsed px-0 py-1 flex-grow-1 text-start" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#biblioMenu<?= $biblio->idBiblio ?>"
+                                aria-expanded="false" aria-controls="biblioMenu<?= $biblio->idBiblio ?>">
+                            <?= htmlspecialchars($biblio->nom) ?>
+                        </div>
+                        <a href="/bibliotheque/<?= $biblio->idBiblio ?>" class="btn btn-sm btn-outline-secondary ms-2" title="Ouvrir la bibliothèque">
+                            <i class="bi bi-collection"></i>
+                        </a>
+                    </h2>
 
-
-
-                <?php 
-                if($listBibliotheques):
-                 foreach ($listBibliotheques as $biblio): ?>
-                    <div class="accordion-item border-0">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed px-0 py-1" type="button" data-bs-toggle="collapse" data-bs-target="#biblioMenu<?= $biblio->idBiblio ?>">
-                                <?= htmlspecialchars($biblio->nom) ?>
-                            </button>
-                        </h2>
-                        <div id="biblioMenu<?= $biblio->idBiblio ?>" class="accordion-collapse collapse">
-                            <div class="accordion-body py-0">
-                                <ul class="nav flex-column ms-3">
+                    <div id="biblioMenu<?= $biblio->idBiblio ?>" class="accordion-collapse collapse">
+                        <div class="accordion-body py-0">
+                            <ul class="nav flex-column ms-3">
                                 <?php if (!empty($biblio->livres)): ?>
                                     <?php foreach ($biblio->livres as $livre): ?>
                                         <li class="nav-item">
@@ -128,14 +139,13 @@ if (isset($_SESSION['user'])) {
                                         <span class="nav-link text-muted">Aucun livre</span>
                                     </li>
                                 <?php endif; ?>
-                                </ul>                                
-                            </div>
+                            </ul>
                         </div>
                     </div>
-                <?php 
-             endforeach;
-            endif; ?>
-            
+                </div>
+            <?php endforeach; ?>
+            <?php endif; ?>
+
 
             </div>
         </div>
@@ -153,9 +163,10 @@ if (isset($_SESSION['user'])) {
         const form = document.getElementById('libraryInputContainer');
 
         btn.addEventListener('click', () => {
-            form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+            form.classList.toggle('d-none');
         });
     });
+
 </script>
 
 </body>

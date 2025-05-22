@@ -27,4 +27,50 @@ class BilbiothequeController extends BaseController {
     
         return $response->withHeader('Location', '/')->withStatus(302);
     }
+
+    public function getBibliotheque(Request $request, Response $response, array $args) {
+        $idBiblio = (int)$args['idBiblio'];
+        $bibliotheque = Bibliotheque::fetchBibliothequeById($idBiblio);
+    
+        
+        if ($bibliotheque && $bibliotheque->isMemberOfBibliotheque($idBiblio)) {
+            $bibliotheque->loadLivres();
+            return $this->view->render($response, '/bibliotheque/bibliotheque.php', [
+                'bibliotheque' => $bibliotheque,
+                'livres' => Livre::fetchBooks()
+            ]);
+        } else {
+            return $response->withHeader('Location', '/')->withStatus(302);
+        }
+    }
+
+    public function editBibliotheque(Request $request, Response $response, array $args) {
+        $idBiblio = (int)$args['idBiblio'];
+        $data = $request->getParsedBody();
+        $nom = $data['nom'] ?? '';
+        $bibliotheque = Bibliotheque::fetchBibliothequeById($idBiblio);
+    
+        // i want it to send it to the route /bibliotheque/{idBiblio} but its telling me its not a template
+
+        if ($bibliotheque && $bibliotheque->isMemberOfBibliotheque($idBiblio)) {
+            $bibliotheque->updateBibliotheque($idBiblio, $nom);
+            return $this->view->render($response, "/bibliotheque/{$idBiblio}", [
+                'bibliotheque' => $bibliotheque,
+                'livres' => Livre::fetchBooks()
+            ]);
+        } else {
+            return $response->withHeader('Location', '/')->withStatus(302);
+        }
+    }
+
+    public function deleteBibliotheque(Request $request, Response $response, array $args) {
+        $idBiblio = (int)$args['idBiblio'];
+        $bibliotheque = Bibliotheque::fetchBibliothequeById($idBiblio);
+    
+        if ($bibliotheque && $bibliotheque->isMemberOfBibliotheque($idBiblio)) {
+            $bibliotheque->deleteBibliotheque($idBiblio);
+        }
+    
+        return $response->withHeader('Location', '/')->withStatus(302);
+    }
 }
