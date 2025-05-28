@@ -10,7 +10,6 @@ if (isset($_SESSION['user'])) {
 } else {
     $listBibliotheques = [];
 }
-var_dump($user);
 ?>
 
 <!DOCTYPE html> 

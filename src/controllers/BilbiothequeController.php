@@ -50,14 +50,11 @@ class BilbiothequeController extends BaseController {
         $nom = $data['nom'] ?? '';
         $bibliotheque = Bibliotheque::fetchBibliothequeById($idBiblio);
     
-        // i want it to send it to the route /bibliotheque/{idBiblio} but its telling me its not a template
+        
 
         if ($bibliotheque && $bibliotheque->isMemberOfBibliotheque($idBiblio)) {
             $bibliotheque->updateBibliotheque($idBiblio, $nom);
-            return $this->view->render($response, "/bibliotheque/{$idBiblio}", [
-                'bibliotheque' => $bibliotheque,
-                'livres' => Livre::fetchBooks()
-            ]);
+            return $response->withHeader('Location', "/bibliotheque/{$idBiblio}")->withStatus(302);
         } else {
             return $response->withHeader('Location', '/')->withStatus(302);
         }
@@ -72,5 +69,19 @@ class BilbiothequeController extends BaseController {
         }
     
         return $response->withHeader('Location', '/')->withStatus(302);
+    }
+
+    public function showAddLivreForm(Request $request, Response $response, array $args) {
+        $idBiblio = (int)$args['idBiblio'];
+        $bibliotheque = Bibliotheque::fetchBibliothequeById($idBiblio);
+    
+        if ($bibliotheque && $bibliotheque->isMemberOfBibliotheque($idBiblio)) {
+            return $this->view->render($response, '/bibliotheque/addLivre.php', [
+                'bibliotheque' => $bibliotheque,
+                'livres' => Livre::fetchBooks()
+            ]);
+        } else {
+            return $response->withHeader('Location', '/')->withStatus(302);
+        }
     }
 }

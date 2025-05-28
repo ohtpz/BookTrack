@@ -38,6 +38,7 @@ $app->post('/bibliotheque/add', [BilbiothequeController::class, 'ajouteBibliothe
 $app->get('/bibliotheque/{idBiblio}', [BilbiothequeController::class, 'getBibliotheque']);
 $app->post('/bibliotheque/delete/{idBiblio}', [BilbiothequeController::class, 'deleteBibliotheque']);
 $app->post('/bibliotheque/edit/{idBiblio}', [BilbiothequeController::class, 'editBibliotheque']);
+$app->get('/bibliotheque/addLivre/{idBiblio}', [BilbiothequeController::class, 'showAddLivreForm']);
 
 //Detail
 $app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);

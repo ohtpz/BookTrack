@@ -1,27 +1,26 @@
-<?php
-//     var_dump($bibliotheque);
-//     die();
-?>
-  
 <div class="container mt-4">
-    <h1>
-        <?= htmlspecialchars($bibliotheque->nom) ?>
-        <a href="" class="btn btn-sm btn-outline-primary ms-2">Modifier</a>
-        <div id="">
-            <form action="/bibliotheque/edit/<?= $bibliotheque->idBiblio?>" method="post">
-                <input type="text" class="form-control form-control-sm" name="nom" value="<?= $bibliotheque->nom?>" minlength="3">
-                <button type="submit" class="btn btn-sm btn-success mt-2">Enregistrer</button>  
+    <h1 id="bibliothequeName"><?= htmlspecialchars($bibliotheque->nom) ?></h1>
+        <?php if($user && $user->isMemberOfBibliotheque($bibliotheque->idBiblio)): ?>
+            <button id="editButton" class="btn btn-sm btn-outline-primary ms-2">Modifier</button>
+            <div id="editForm" style="display: none;">
+                <form action="/bibliotheque/edit/<?= $bibliotheque->idBiblio ?>" method="post">
+                    <input type="text" id="bibliothequeInput" class="form-control form-control-sm" name="nom" value="<?= htmlspecialchars($bibliotheque->nom) ?>" minlength="3">
+                    <button type="submit" class="btn btn-sm btn-success mt-2">Enregistrer</button>
+                    <button type="button" id="cancelButton" class="btn btn-sm btn-secondary mt-2">Annuler</button>
+                </form>
+            </div>
+            <form method="POST" action="/bibliotheque/delete/<?= $bibliotheque->idBiblio ?>" class="d-inline" onsubmit="return confirm('Supprimer cette bibliothèque ?')">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
             </form>
-        </div>
-        <form method="POST" action="/bibliotheque/delete/<?= $bibliotheque->idBiblio ?>" class="d-inline" onsubmit="return confirm('Supprimer cette bibliothèque ?')">
-            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-        </form>
-    </h1>
+            
+        <?php endif; ?>
 
-    <hr>
+    <hr>     
 
     <h3>Livres</h3>
-    <a href="/bibliotheque/addLivre/<?= $bibliotheque->idBiblio?>" class="btn btn-warning">Modifier livres</a>
+    <?php if($user && $user->isMemberOfBibliotheque($bibliotheque->idBiblio)):    ?>
+        <a href="/bibliotheque/addLivre/<?= $bibliotheque->idBiblio?>" class="btn btn-warning">Modifier livres</a>
+    <?php endif; ?>
     <?php if (!empty($bibliotheque->livres)): ?>
         <ul class="list-group">
             <?php foreach ($bibliotheque->livres as $livre): ?>
@@ -40,3 +39,26 @@
         <p class="text-muted">Aucun livre dans cette bibliothèque.</p>
     <?php endif; ?>
 </div>
+<script>
+document.getElementById('editButton').addEventListener('click', function() {
+    const editForm = document.getElementById('editForm');
+    const editButton = document.getElementById('editButton');
+    const bibliothequeName = document.getElementById('bibliothequeName');
+    const bibliothequeInput = document.getElementById('bibliothequeInput');
+    
+    editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+    editButton.style.display = editForm.style.display === 'block' ? 'none' : 'inline-block';
+    bibliothequeName.style.display = editForm.style.display === 'block' ? 'none' : 'block';
+    bibliothequeInput.value = bibliothequeName.textContent.trim();
+});
+
+document.getElementById('cancelButton').addEventListener('click', function() {
+    const editForm = document.getElementById('editForm');
+    const editButton = document.getElementById('editButton');
+    const bibliothequeName = document.getElementById('bibliothequeName');
+    
+    editForm.style.display = 'none';
+    editButton.style.display = 'inline-block';
+    bibliothequeName.style.display = 'block';
+});
+</script>
