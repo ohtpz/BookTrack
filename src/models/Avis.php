@@ -3,6 +3,7 @@
 namespace Elpommier\BookTrack\models;
 
 use core\Database;
+use DateTime;
 use PDO;
 
 class Avis {
@@ -12,30 +13,32 @@ class Avis {
     
     public string $commentaire;
 
-    public string $date;
+    public $date;
 
     public int $idUtilisateur;
 
     public int $idLivre;
 
-    public static function fecthAvis() {
-        $stmt = Database::connection()->query("SELECT * FROM Avis");
-        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
-        return $stmt->fetchAll();
-    }
-
-    public static function getAvgNote($idLivre) {
-        $stmt = Database::connection()->query("SELECT note FROM Avis WHERE idLivre = :idLivre");
+    public static function fetchAvis($idLivre) {
+        $stmt = Database::connection()->prepare("SELECT * FROM Avis WHERE idLivre = :idLivre");
         $stmt->bindParam("idLivre", $idLivre);
         $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
         $stmt->execute();
-        $notes = $stmt->fetchAll();
-
-        $total = 0;
-
-        foreach($notes as $note) {
-            $total += $note;
-        }
-        return $total / count($notes);
+        return $stmt->fetchAll();
     }
+
+    public static function addComment(int $note, string $commentaire, string $date, int $idUtilisateur, int $idLivre): void {
+        $stmt = Database::connection()->prepare(
+            "INSERT INTO Avis (note, commentaire, date, idUtilisateur, idLivre) 
+             VALUES (:note, :commentaire, :date, :idUtilisateur, :idLivre)"
+        );
+        $stmt->execute([
+            'note' => $note,
+            'commentaire' => $commentaire,
+            'date' => $date,
+            'idUtilisateur' => $idUtilisateur,
+            'idLivre' => $idLivre
+        ]);
+    }
+    
 }

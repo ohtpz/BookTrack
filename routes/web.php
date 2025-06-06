@@ -44,5 +44,6 @@ $app->post('/deleteBiblioLivre', [BilbiothequeController::class, 'deleteLivreBib
 
 //Detail
 $app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);
+$app->post("/detail/{idLivre}/addComment", [LivreController::class, "addComment"]);
 
 

@@ -6,9 +6,27 @@ main {
 }
 .detail {
     display: flex;
+    width: 100%;
+    gap: 5%;
 }
 
 .detail img {
     height: 400px;
     width: 400px;
+}
+
+.comments {
+    align-items:end;
+}
+
+input[name="rating[]"] {
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    /* width: 1rem;
+    height: 1rem; */
+}
+
+input[name="rating[]"]:checked {
+    color: orange;
 }
