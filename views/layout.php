@@ -59,9 +59,6 @@ if (isset($_SESSION['user'])) {
                         <li class="nav-item">
                             <a class="nav-link" href="/">Accueil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/conv">Conv</a>
-                        </li>
                         <?php if (!empty($_SESSION['user'])): ?>
                             
                             <li class="nav-item">
