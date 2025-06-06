@@ -43,8 +43,8 @@ class EmpruntController
         }
 
         $modele = new Emprunt();
-        $utilisateurs = $modele->getProprietairesDuLivre($idLivre, $_SESSION['user']['idUtilisateur']);
-
+        $utilisateurs = $modele->getProprietairesDuLivre($idLivre, $_SESSION['user']->getIdUtilisateur());
+    
         ob_start();
         require __DIR__ . '/../../views/emprunt/resultats.php';
         $content = ob_get_clean();
@@ -65,7 +65,7 @@ class EmpruntController
         $idProprietaire = (int) $data['idProprietaire'];
         $dateDebut = $data['dateDebut'];
         $dateFin = $data['dateFin'];
-        $idEmprunteur = $_SESSION['user']['idUtilisateur'];
+        $idEmprunteur = $_SESSION['user']->getIdUtilisateur();
 
         $modele = new Emprunt();
 

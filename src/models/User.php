@@ -15,7 +15,7 @@ class User
     private ?string $imageProfil = null;
     private ?string $role = null;
 
-    // --- Méthodes ---
+    // --- MÃ©thodes ---
 
     public static function fetchAll(): array
     {
@@ -47,7 +47,7 @@ class User
         static $current = null;
 
         if (!$current) {
-            $email = $_SESSION['User'] ?? null;
+            $email = $_SESSION['user']->email ?? null;
             if ($email !== null) {
                 $current = static::findByEmail($email);
             }
@@ -58,13 +58,13 @@ class User
 
     public function connect(): void
     {
-        $_SESSION['User'] = $this->email;
+        $_SESSION['user'] = $this->current();
         session_regenerate_id(true);
     }
 
     public function logout(): void
     {
-        $_SESSION['User'] = null;
+        $_SESSION['user'] = null;
     }
 
     public function verifyAdmin(): bool

@@ -74,7 +74,7 @@
                             <strong><?= htmlspecialchars($e['titre']) ?></strong>
                             (du <?= $e['dateDebut'] ?> au <?= $e['dateFin'] ?>)
                             —
-                            <?php if ($e['idEmprunteur'] == $_SESSION['user']['idUtilisateur']): ?>
+                            <?php if ($e['idEmprunteur'] == $_SESSION['user']->getIdUtilisateur()): ?>
                                 avec <strong><?= htmlspecialchars($e['prenomProprio'] . ' ' . $e['nomProprio']) ?></strong> (propriétaire)
                             <?php else: ?>
                                 pour <strong><?= htmlspecialchars($e['prenomEmp'] . ' ' . $e['nomEmp']) ?></strong> (emprunteur)
