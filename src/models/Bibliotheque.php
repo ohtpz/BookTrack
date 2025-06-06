@@ -86,24 +86,24 @@ class Bibliotheque {
     }
 
     
-    public static function ajouterLivre(int $idLivre): void {
+    public static function ajoutLivreBibliotheque(int $idLivre, int $idBiblio): void {
         $stmt = Database::connection()->prepare(
-            "INSERT IGNORE INTO Biblio_Livre (idBiblio, idLivre) VALUES (:idBiblio, :idLivre)"
+            "INSERT INTO Livre_Bibliotheque (idLivre, idBiblio) VALUES (:idLivre, :idBiblio)"
         );
         $stmt->execute([
-            'idBiblio' => $this->idBiblio,
-            'idLivre' => $idLivre
+            'idLivre' => $idLivre,
+            'idBiblio' => $idBiblio
         ]);
     }
 
    
-    public static function supprimerLivre(int $idLivre): void {
+    public static function supprimerLivre(int $idLivre, int $idBiblio): void {
         $stmt = Database::connection()->prepare(
-            "DELETE FROM Biblio_Livre WHERE idBiblio = :idBiblio AND idLivre = :idLivre"
+            "DELETE FROM Livre_Bibliotheque WHERE idLivre = :idLivre AND idBiblio = :idBiblio"
         );
         $stmt->execute([
-            'idBiblio' => $this->idBiblio,
-            'idLivre' => $idLivre
+            'idLivre' => $idLivre,
+            'idBiblio' => $idBiblio,
         ]);
     }
 

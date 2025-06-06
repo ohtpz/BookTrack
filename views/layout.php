@@ -1,5 +1,6 @@
 <?php
 use Elpommier\BookTrack\models\Bibliotheque;
+use Elpommier\BookTrack\models\Livre;
 use Elpommier\BookTrack\models\User;
 
 $user = null;
@@ -125,11 +126,11 @@ if (isset($_SESSION['user'])) {
                     <div id="biblioMenu<?= $biblio->idBiblio ?>" class="accordion-collapse collapse">
                         <div class="accordion-body py-0">
                             <ul class="nav flex-column ms-3">
-                                <?php if (!empty($biblio->livres)): ?>
-                                    <?php foreach ($biblio->livres as $livre): ?>
+                                <?php if (!empty($biblioLivres = Livre::fetchBooksFromBibliotheque($biblio->idBiblio))): ?>
+                                    <?php foreach ($biblioLivres as $livre): ?>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="#">
-                                                <?= htmlspecialchars($livre['titre'] ?? 'Sans titre') ?>
+                                            <a class="nav-link" href="/detail/<?= $livre->idLivre ?>">
+                                                <?= htmlspecialchars($livre->titre) ?>
                                             </a>
                                         </li>
                                     <?php endforeach; ?>

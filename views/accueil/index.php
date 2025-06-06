@@ -9,12 +9,12 @@
                                 <img src="data:image/jpeg;base64,<?= base64_encode($livre->illustration) ?>"
                                      class="card-img-top"
                                      alt="<?= htmlspecialchars($livre->titre) ?>"
-                                     style="height: 250px; object-fit: cover;">
+                                     style="height: 300px;">
                             <?php else: ?>
                                 <img src="/img/default/defaultBook.jpg"
                                      class="card-img-top"
                                      alt="Pas d'image"
-                                     style="height: 250px; object-fit: cover;">
+                                     style="height: 300px; object-fit: cover;">
                             <?php endif; ?>
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($livre->titre) ?></h5>

@@ -19,22 +19,37 @@
 
     <h3>Livres</h3>
     <?php if($user && $user->isMemberOfBibliotheque($bibliotheque->idBiblio)):    ?>
-        <a href="/bibliotheque/addLivre/<?= $bibliotheque->idBiblio?>" class="btn btn-warning">Modifier livres</a>
+        <a href="/bibliotheque/addLivre/<?= $bibliotheque->idBiblio?>" class="btn btn-warning mb-3 ">Modifier livres</a>
     <?php endif; ?>
     <?php if (!empty($bibliotheque->livres)): ?>
-        <ul class="list-group">
+        
+        <div class="row">
             <?php foreach ($bibliotheque->livres as $livre): ?>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <?= htmlspecialchars($livre['titre']) ?>
-                    <div>
-                        <a href="/livre/edit/<?= $livre['idLivre'] ?>" class="btn btn-sm btn-outline-secondary">Modifier</a>
-                        <form method="POST" action="/livre/delete/<?= $livre['idLivre'] ?>" class="d-inline" onsubmit="return confirm('Supprimer ce livre ?')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger" >Supprimer</button>
-                        </form>
-                    </div>  
-                </li>
+                <div class="col-md-4 mb-4">  
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <div class="form-check d-flex align-items-center">
+                                <label class="form-check-label d-flex flex-grow-1 justify-content-between align-items-center" for="livre-<?= htmlspecialchars($livre['idLivre']) ?>">
+                                    <div class="d-flex flex-column">
+                                        <span><?= htmlspecialchars($livre['titre']) ?></span>
+                                        <span class="text-muted"><?= htmlspecialchars($livre['auteur']) ?></span>
+                                    </div>
+                                    <img src="<?= isset($livre['illustration']) ? 'data:image/jpeg;base64,' . base64_encode($livre['illustration']) : '/img/default/defaultBook.jpg' ?>" alt="" width="140" height="200" class="ms-2">
+                                </label>
+                            </div>
+                            <div class="mt-auto text-center">
+                                <a href="/detail/<?= $livre['idLivre'] ?>" class="btn btn-sm btn-primary ">Voir</a>
+                                <form method="POST" action="/deleteBiblioLivre" class="d-inline" onsubmit="return confirm('Supprimer ce livre ?')">
+                                    <input type="hidden" name="idLivre" value="<?= $livre['idLivre'] ?>">
+                                    <input type="hidden" name="idBiblio" value="<?= $bibliotheque->idBiblio ?>">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <?php endforeach; ?>
-        </ul>
+        </div>
     <?php else: ?>
         <p class="text-muted">Aucun livre dans cette bibliothèque.</p>
     <?php endif; ?>
