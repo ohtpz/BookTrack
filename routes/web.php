@@ -38,5 +38,6 @@ $app->post('/bibliotheque/add', [BilbiothequeController::class, 'ajouteBibliothe
 
 //Detail
 $app->get("/detail/{idLivre}", [LivreController::class, "getBook"]);
+$app->post("/detail/{idLivre}/addComment", [LivreController::class, "addComment"]);
 
 
