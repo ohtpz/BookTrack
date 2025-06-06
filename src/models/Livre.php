@@ -34,4 +34,17 @@ class Livre {
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public static function fetchBooksFromBibliotheque($idBiblio) {
+        $stmt = Database::connection()->prepare(
+            "SELECT l.idLivre, l.titre, l.illustration, l.auteur 
+             FROM Livre l
+             JOIN Livre_Bibliotheque lb ON l.idLivre = lb.idLivre
+             WHERE lb.idBiblio = :idBiblio"
+        );
+        $stmt->bindParam("idBiblio", $idBiblio);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, static::class);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

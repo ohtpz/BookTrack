@@ -75,7 +75,7 @@ class User
     public function isMemberOfBibliotheque(int $idBiblio): bool
     {
         $stmt = Database::connection()->prepare("
-            SELECT * FROM Biblio_User WHERE idUtilisateur = :idUtilisateur AND idBiblio = :idBiblio
+            SELECT * FROM Bibliotheque WHERE idUtilisateur = :idUtilisateur AND idBiblio = :idBiblio
         ");
         $stmt->execute([
             'idUtilisateur' => $this->getIdUtilisateur(),

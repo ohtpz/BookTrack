@@ -3,6 +3,7 @@
 namespace Elpommier\BookTrack\models;
 
 use core\Database;
+use Elpommier\BookTrack\models\User;
 use PDO;
 
 class Bibliotheque {
@@ -31,6 +32,17 @@ class Bibliotheque {
         return $stmt->fetchAll();
     }
 
+    public static function fetchBibliothequeById(int $idBiblio): ?self {
+        $stmt = Database::connection()->prepare(
+            "SELECT idBiblio, idUtilisateur, nom 
+             FROM Bibliotheque 
+             WHERE idBiblio = :idBiblio"
+        );
+        $stmt->execute(['idBiblio' => $idBiblio]);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, self::class);
+        return $stmt->fetch() ?: null;
+    }
+
     public static function createBibliotheque(int $idUtilisateur, string $nom): void {
         $stmt = Database::connection()->prepare(
             "INSERT INTO Bibliotheque (idUtilisateur, nom) 
@@ -42,36 +54,69 @@ class Bibliotheque {
         ]);
     }
 
+    public static function updateBibliotheque(int $idBiblio, string $nom): void {
+        $stmt = Database::connection()->prepare(
+            "UPDATE Bibliotheque 
+             SET nom = :nom 
+             WHERE idBiblio = :idBiblio"
+        );
+        $stmt->execute([
+            'idBiblio' => $idBiblio,
+            'nom' => $nom
+        ]);
+    }
+
+    public static function deleteBibliotheque($idBiblio): void {
+        $stmt = Database::connection()->prepare(
+            "DELETE FROM Bibliotheque 
+             WHERE idBiblio = :idBiblio"
+        );
+        $stmt->execute(['idBiblio' => $idBiblio]);
+    }
+    
     public function loadLivres(): void {
         $stmt = Database::connection()->prepare(
             "SELECT l.* 
              FROM Livre l
-             JOIN Biblio_Livre bl ON l.idLivre = bl.idLivre
-             WHERE bl.idBiblio = :idBiblio"
+             JOIN Livre_Bibliotheque lb ON l.idLivre = lb.idLivre
+             WHERE lb.idBiblio = :idBiblio"
         );
         $stmt->execute(['idBiblio' => $this->idBiblio]);
         $this->livres = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     
-    public static function ajouterLivre(int $idLivre): void {
+    public static function ajoutLivreBibliotheque(int $idLivre, int $idBiblio): void {
         $stmt = Database::connection()->prepare(
-            "INSERT IGNORE INTO Biblio_Livre (idBiblio, idLivre) VALUES (:idBiblio, :idLivre)"
+            "INSERT INTO Livre_Bibliotheque (idLivre, idBiblio) VALUES (:idLivre, :idBiblio)"
         );
         $stmt->execute([
-            'idBiblio' => $this->idBiblio,
-            'idLivre' => $idLivre
+            'idLivre' => $idLivre,
+            'idBiblio' => $idBiblio
         ]);
     }
 
    
-    public static function supprimerLivre(int $idLivre): void {
+    public static function supprimerLivre(int $idLivre, int $idBiblio): void {
         $stmt = Database::connection()->prepare(
-            "DELETE FROM Biblio_Livre WHERE idBiblio = :idBiblio AND idLivre = :idLivre"
+            "DELETE FROM Livre_Bibliotheque WHERE idLivre = :idLivre AND idBiblio = :idBiblio"
         );
         $stmt->execute([
-            'idBiblio' => $this->idBiblio,
-            'idLivre' => $idLivre
+            'idLivre' => $idLivre,
+            'idBiblio' => $idBiblio,
         ]);
+    }
+
+    
+    public function isMemberOfBibliotheque(int $idBiblio): bool
+    {
+        $stmt = Database::connection()->prepare("
+            SELECT * FROM Bibliotheque WHERE idUtilisateur = :idUtilisateur AND idBiblio = :idBiblio
+        ");
+        $stmt->execute([
+            'idUtilisateur' => $this->idUtilisateur,
+            'idBiblio' => $idBiblio
+        ]);
+        return $stmt->fetch() !== false;
     }
 }

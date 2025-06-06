@@ -1,5 +1,5 @@
 <div class="detail">
-    <img src="data:image/jpeg;base64,<?= isset($livre->illustration) ? base64_encode($livre->illustration) : "defaultBook.jpg" ?>" alt="">
+    <img src="<?= isset($livre->illustration) ? 'data:image/jpeg;base64,' . base64_encode($livre->illustration) : '/img/default/defaultBook.jpg' ?>" alt="">
     <div>
         <a href="/emprunt/{idLivre}" class="btn btn-primary">Louer</a>
         <h1>Titre</h1>

@@ -44,7 +44,6 @@ class EmpruntController
 
         $modele = new Emprunt();
         $utilisateurs = $modele->getProprietairesDuLivre($idLivre, $_SESSION['user']->getIdUtilisateur());
-    
         ob_start();
         require __DIR__ . '/../../views/emprunt/resultats.php';
         $content = ob_get_clean();
